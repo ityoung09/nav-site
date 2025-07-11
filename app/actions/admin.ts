@@ -11,7 +11,7 @@ import {
   addCodeSnippet,
   updateCodeSnippet,
   deleteCodeSnippet,
-} from "@/lib/data"
+} from "@/lib/server-data"
 import { revalidatePath } from "next/cache"
 
 async function requireAdmin() {
@@ -30,7 +30,7 @@ export async function createCategory(formData: FormData) {
     name: formData.get("name") as string,
     description: formData.get("description") as string,
     icon: formData.get("icon") as string,
-    count: 0,
+    count: parseInt(formData.get("count") as string) || 0,
   }
 
   addCategory(category)
@@ -45,6 +45,7 @@ export async function editCategory(id: string, formData: FormData) {
     name: formData.get("name") as string,
     description: formData.get("description") as string,
     icon: formData.get("icon") as string,
+    count: parseInt(formData.get("count") as string) || 0,
   }
 
   updateCategory(id, updates)
@@ -104,7 +105,7 @@ export async function editResource(
 export async function removeResource(id: string, type: "featured" | "tools" | "documentation" | "community") {
   await requireAdmin()
 
-  deleteResource(id, type)
+  deleteResource(id)
   revalidatePath("/")
   revalidatePath("/admin")
 }

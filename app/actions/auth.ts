@@ -16,11 +16,12 @@ export async function loginAction(formData: FormData) {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
-      maxAge: 60 * 60 * 24 * 7, // 1 week
+      maxAge: 60 * 60 * 24 * 7, // 1 周
     })
     redirect("/")
   } else {
-    return { error: "Invalid credentials" }
+    // 登录失败时重定向到登录页面
+    redirect("/login?error=invalid")
   }
 }
 

@@ -4,22 +4,16 @@ export interface User {
   id: string
   email: string
   name: string
-  role: "user" | "admin"
+  role: "admin"
 }
 
-// Mock user data - in production, this would be in a database
+// 管理员用户数据 - 生产环境中应该存储在数据库中
 const users: User[] = [
   {
     id: "1",
-    email: "admin@devhub.com",
-    name: "Admin User",
+    email: "admin",
+    name: "管理员",
     role: "admin",
-  },
-  {
-    id: "2",
-    email: "user@devhub.com",
-    name: "Regular User",
-    role: "user",
   },
 ]
 
@@ -40,10 +34,10 @@ export async function getCurrentUser(): Promise<User | null> {
 }
 
 export async function login(email: string, password: string): Promise<User | null> {
-  // Mock authentication - in production, verify against database
+  // 简单的管理员认证 - 用户名admin，密码admin
   const user = users.find((u) => u.email === email)
 
-  if (user && password === "password") {
+  if (user && email === "admin" && password === "admin") {
     return user
   }
 
