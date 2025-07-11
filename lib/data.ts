@@ -103,11 +103,11 @@ export const codeSnippets = [
     description: "Randomly shuffle array elements using Fisher-Yates algorithm",
     language: "JavaScript",
     code: `function shuffle(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-  return array;
+for (let i = array.length - 1; i > 0; i--) {
+  const j = Math.floor(Math.random() * (i + 1));
+  [array[i], array[j]] = [array[j], array[i]];
+}
+return array;
 }`,
     tags: ["array", "random", "algorithm"],
   },
@@ -117,11 +117,11 @@ export const codeSnippets = [
     description: "Delay function execution until after a specified time",
     language: "JavaScript",
     code: `function debounce(func, delay) {
-  let timeoutId;
-  return function (...args) {
-    clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => func.apply(this, args), delay);
-  };
+let timeoutId;
+return function (...args) {
+  clearTimeout(timeoutId);
+  timeoutId = setTimeout(() => func.apply(this, args), delay);
+};
 }`,
     tags: ["performance", "optimization", "utility"],
   },
@@ -131,13 +131,13 @@ export const codeSnippets = [
     description: "Efficient sorting algorithm implementation",
     language: "Python",
     code: `def quicksort(arr):
-    if len(arr) <= 1:
-        return arr
-    pivot = arr[len(arr) // 2]
-    left = [x for x in arr if x < pivot]
-    middle = [x for x in arr if x == pivot]
-    right = [x for x in arr if x > pivot]
-    return quicksort(left) + middle + quicksort(right)`,
+  if len(arr) <= 1:
+      return arr
+  pivot = arr[len(arr) // 2]
+  left = [x for x in arr if x < pivot]
+  middle = [x for x in arr if x == pivot]
+  right = [x for x in arr if x > pivot]
+  return quicksort(left) + middle + quicksort(right)`,
     tags: ["sorting", "algorithm", "recursion"],
   },
   {
@@ -146,16 +146,16 @@ export const codeSnippets = [
     description: "Robust API call with proper error handling",
     language: "JavaScript",
     code: `async function fetchData(url) {
-  try {
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error(\`HTTP error! status: \${response.status}\`);
-    }
-    return await response.json();
-  } catch (error) {
-    console.error('Fetch error:', error);
-    throw error;
+try {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(\`HTTP error! status: \${response.status}\`);
   }
+  return await response.json();
+} catch (error) {
+  console.error('Fetch error:', error);
+  throw error;
+}
 }`,
     tags: ["api", "async", "error-handling"],
   },
@@ -165,10 +165,10 @@ export const codeSnippets = [
     description: "Perfect centering with flexbox",
     language: "CSS",
     code: `.center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+display: flex;
+justify-content: center;
+align-items: center;
+height: 100vh;
 }`,
     tags: ["css", "flexbox", "centering"],
   },
@@ -178,25 +178,25 @@ export const codeSnippets = [
     description: "Custom hook for local storage state management",
     language: "React",
     code: `function useLocalStorage(key, initialValue) {
-  const [storedValue, setStoredValue] = useState(() => {
-    try {
-      const item = window.localStorage.getItem(key);
-      return item ? JSON.parse(item) : initialValue;
-    } catch (error) {
-      return initialValue;
-    }
-  });
+const [storedValue, setStoredValue] = useState(() => {
+  try {
+    const item = window.localStorage.getItem(key);
+    return item ? JSON.parse(item) : initialValue;
+  } catch (error) {
+    return initialValue;
+  }
+});
 
-  const setValue = (value) => {
-    try {
-      setStoredValue(value);
-      window.localStorage.setItem(key, JSON.stringify(value));
-    } catch (error) {
-      console.error(error);
-    }
-  };
+const setValue = (value) => {
+  try {
+    setStoredValue(value);
+    window.localStorage.setItem(key, JSON.stringify(value));
+  } catch (error) {
+    console.error(error);
+  }
+};
 
-  return [storedValue, setValue];
+return [storedValue, setValue];
 }`,
     tags: ["react", "hooks", "localStorage"],
   },
