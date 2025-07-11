@@ -1,5 +1,3 @@
-"use client"
-
 import { Code, Book, Wrench, Users } from "lucide-react"
 
 export const categories = [
