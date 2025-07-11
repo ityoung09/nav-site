@@ -1,22 +1,38 @@
 "use client"
 
-import { Github, Moon, Sun, User } from "lucide-react"
+import { Github, Moon, Sun, User, Crown, LogOut } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { useTheme } from "next-themes"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import MobileSidebar from "./mobile-sidebar"
+import { logoutAction } from "@/app/actions/auth"
+import type { User as UserType } from "@/lib/auth"
 
-export default function Header() {
+interface HeaderProps {
+  user?: UserType | null
+}
+
+export default function Header({ user }: HeaderProps) {
   const { theme, setTheme } = useTheme()
 
   return (
-    <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center justify-between px-6">
-        <div className="flex items-center space-x-6">
+    <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
+      <div className="container flex h-16 items-center justify-between px-4 md:px-6">
+        <div className="flex items-center space-x-4 md:space-x-6">
+          <MobileSidebar />
+
           <Link href="/" className="flex items-center space-x-2">
-            <div className="h-8 w-8 bg-primary rounded-md flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-sm">DN</span>
+            <div className="h-8 w-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-sm">DH</span>
             </div>
-            <span className="font-bold text-xl">Dev Nav</span>
+            <span className="font-bold text-xl hidden sm:block">DevHub</span>
           </Link>
 
           <nav className="hidden md:flex items-center space-x-6">
@@ -39,7 +55,7 @@ export default function Header() {
         </div>
 
         <div className="flex items-center space-x-2">
-          <Button variant="ghost" size="icon" asChild>
+          <Button variant="ghost" size="icon" asChild className="hidden sm:flex">
             <Link href="https://github.com" target="_blank">
               <Github className="h-4 w-4" />
             </Link>
@@ -50,10 +66,43 @@ export default function Header() {
             <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
           </Button>
 
-          <Button variant="outline" size="sm">
-            <User className="h-4 w-4 mr-2" />
-            Login
-          </Button>
+          {user ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" className="flex items-center space-x-2 bg-transparent">
+                  <User className="h-4 w-4" />
+                  <span className="hidden sm:block">{user.name}</span>
+                  {user.role === "admin" && <Crown className="h-3 w-3 text-yellow-500" />}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem asChild>
+                  <Link href="/profile">Profile</Link>
+                </DropdownMenuItem>
+                {user.role === "admin" && (
+                  <DropdownMenuItem asChild>
+                    <Link href="/admin">Admin Panel</Link>
+                  </DropdownMenuItem>
+                )}
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <form action={logoutAction}>
+                    <button type="submit" className="flex items-center space-x-2 w-full">
+                      <LogOut className="h-4 w-4" />
+                      <span>Logout</span>
+                    </button>
+                  </form>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Button variant="outline" size="sm" asChild>
+              <Link href="/login">
+                <User className="h-4 w-4 mr-2" />
+                <span className="hidden sm:block">Login</span>
+              </Link>
+            </Button>
+          )}
         </div>
       </div>
     </header>

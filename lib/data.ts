@@ -1,37 +1,66 @@
-import { Code, Book, Wrench, Users } from "lucide-react"
+"use client"
 
-export const categories = [
+export interface Category {
+  id: string
+  name: string
+  description: string
+  icon: string
+  count: number
+}
+
+export interface Resource {
+  id: string
+  name: string
+  description: string
+  url: string
+  category: string
+  tags: string[]
+  featured?: boolean
+  icon?: string
+}
+
+export interface CodeSnippet {
+  id: string
+  title: string
+  description: string
+  language: string
+  code: string
+  tags: string[]
+}
+
+// Mock data store - in production, this would be in a database
+const categoriesData: Category[] = [
   {
     id: "code-snippets",
     name: "Code Snippets",
     description: "Ready-to-use code examples",
-    icon: Code,
+    icon: "Code",
     count: 150,
   },
   {
     id: "documentation",
     name: "Documentation",
     description: "Official docs and guides",
-    icon: Book,
+    icon: "Book",
     count: 85,
   },
   {
     id: "tools",
     name: "Tools",
     description: "Development and debugging tools",
-    icon: Wrench,
+    icon: "Wrench",
     count: 120,
   },
   {
     id: "community",
     name: "Community",
     description: "Forums and social platforms",
-    icon: Users,
+    icon: "Users",
     count: 45,
   },
 ]
 
-export const featuredResources = [
+const featuredResourcesData: Resource[] = [
   {
     id: "1",
     name: "VS Code",
@@ -94,7 +123,7 @@ export const featuredResources = [
   },
 ]
 
-export const codeSnippets = [
+const codeSnippetsData: CodeSnippet[] = [
   {
     id: "1",
     title: "Array Shuffle",
@@ -200,7 +229,7 @@ return [storedValue, setValue];
   },
 ]
 
-export const developerTools = [
+const developerToolsData: Resource[] = [
   {
     id: "tool-1",
     name: "Postman",
@@ -257,7 +286,7 @@ export const developerTools = [
   },
 ]
 
-export const documentationResources = [
+const documentationResourcesData: Resource[] = [
   {
     id: "doc-1",
     name: "React Documentation",
@@ -314,7 +343,7 @@ export const documentationResources = [
   },
 ]
 
-export const communityResources = [
+const communityResourcesData: Resource[] = [
   {
     id: "comm-1",
     name: "Reddit - Programming",
@@ -370,3 +399,142 @@ export const communityResources = [
     icon: "SO",
   },
 ]
+
+// Export getters and setters for data management
+export const categories = categoriesData
+export const featuredResources = featuredResourcesData
+export const codeSnippets = codeSnippetsData
+export const developerTools = developerToolsData
+export const documentationResources = documentationResourcesData
+export const communityResources = communityResourcesData
+
+// CRUD operations for categories
+export function addCategory(category: Omit<Category, "id">) {
+  const newCategory = { ...category, id: Date.now().toString() }
+  categoriesData.push(newCategory)
+  return newCategory
+}
+
+export function updateCategory(id: string, updates: Partial<Category>) {
+  const index = categoriesData.findIndex((cat) => cat.id === id)
+  if (index !== -1) {
+    categoriesData[index] = { ...categoriesData[index], ...updates }
+    return categoriesData[index]
+  }
+  return null
+}
+
+export function deleteCategory(id: string) {
+  const index = categoriesData.findIndex((cat) => cat.id === id)
+  if (index !== -1) {
+    categoriesData.splice(index, 1)
+    return true
+  }
+  return false
+}
+
+// CRUD operations for resources
+export function addResource(
+  resource: Omit<Resource, "id">,
+  type: "featured" | "tools" | "documentation" | "community",
+) {
+  const newResource = { ...resource, id: Date.now().toString() }
+
+  switch (type) {
+    case "featured":
+      featuredResourcesData.push(newResource)
+      break
+    case "tools":
+      developerToolsData.push(newResource)
+      break
+    case "documentation":
+      documentationResourcesData.push(newResource)
+      break
+    case "community":
+      communityResourcesData.push(newResource)
+      break
+  }
+
+  return newResource
+}
+
+export function updateResource(
+  id: string,
+  updates: Partial<Resource>,
+  type: "featured" | "tools" | "documentation" | "community",
+) {
+  let data: Resource[]
+
+  switch (type) {
+    case "featured":
+      data = featuredResourcesData
+      break
+    case "tools":
+      data = developerToolsData
+      break
+    case "documentation":
+      data = documentationResourcesData
+      break
+    case "community":
+      data = communityResourcesData
+      break
+  }
+
+  const index = data.findIndex((res) => res.id === id)
+  if (index !== -1) {
+    data[index] = { ...data[index], ...updates }
+    return data[index]
+  }
+  return null
+}
+
+export function deleteResource(id: string, type: "featured" | "tools" | "documentation" | "community") {
+  let data: Resource[]
+
+  switch (type) {
+    case "featured":
+      data = featuredResourcesData
+      break
+    case "tools":
+      data = developerToolsData
+      break
+    case "documentation":
+      data = documentationResourcesData
+      break
+    case "community":
+      data = communityResourcesData
+      break
+  }
+
+  const index = data.findIndex((res) => res.id === id)
+  if (index !== -1) {
+    data.splice(index, 1)
+    return true
+  }
+  return false
+}
+
+// CRUD operations for code snippets
+export function addCodeSnippet(snippet: Omit<CodeSnippet, "id">) {
+  const newSnippet = { ...snippet, id: Date.now().toString() }
+  codeSnippetsData.push(newSnippet)
+  return newSnippet
+}
+
+export function updateCodeSnippet(id: string, updates: Partial<CodeSnippet>) {
+  const index = codeSnippetsData.findIndex((snippet) => snippet.id === id)
+  if (index !== -1) {
+    codeSnippetsData[index] = { ...codeSnippetsData[index], ...updates }
+    return codeSnippetsData[index]
+  }
+  return null
+}
+
+export function deleteCodeSnippet(id: string) {
+  const index = codeSnippetsData.findIndex((snippet) => snippet.id === id)
+  if (index !== -1) {
+    codeSnippetsData.splice(index, 1)
+    return true
+  }
+  return false
+}

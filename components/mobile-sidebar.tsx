@@ -1,12 +1,17 @@
 "use client"
 
+import { useState } from "react"
+import { Menu, X } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { Button } from "@/components/ui/button"
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { cn } from "@/lib/utils"
 import { getIconComponent } from "@/lib/icons"
 import { categories } from "@/lib/data"
 
-export default function Sidebar() {
+export default function MobileSidebar() {
+  const [open, setOpen] = useState(false)
   const pathname = usePathname()
 
   const sidebarItems = [
@@ -25,9 +30,20 @@ export default function Sidebar() {
   ]
 
   return (
-    <aside className="hidden md:block w-64 border-r bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="p-4">
-        <nav className="space-y-2">
+    <Sheet open={open} onOpenChange={setOpen}>
+      <SheetTrigger asChild>
+        <Button variant="ghost" size="icon" className="md:hidden">
+          <Menu className="h-5 w-5" />
+        </Button>
+      </SheetTrigger>
+      <SheetContent side="left" className="w-64 p-0">
+        <div className="flex items-center justify-between p-4 border-b">
+          <span className="font-semibold">Navigation</span>
+          <Button variant="ghost" size="icon" onClick={() => setOpen(false)}>
+            <X className="h-4 w-4" />
+          </Button>
+        </div>
+        <nav className="p-4 space-y-2">
           {sidebarItems.map((item) => {
             const isActive = pathname === `/${item.id}` || (pathname === "/" && item.id === "code-snippets")
             const IconComponent = getIconComponent(item.icon)
@@ -36,6 +52,7 @@ export default function Sidebar() {
               <Link
                 key={item.id}
                 href={`/${item.id}`}
+                onClick={() => setOpen(false)}
                 className={cn(
                   "flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
                   isActive
@@ -49,7 +66,7 @@ export default function Sidebar() {
             )
           })}
         </nav>
-      </div>
-    </aside>
+      </SheetContent>
+    </Sheet>
   )
 }
